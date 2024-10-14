@@ -1,0 +1,24 @@
+{% extends 'registration/registration_base.html' %}
+{% load i18n crispy_forms_tags %}
+
+
+{% block main_container %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h2>Acceso Limitado</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <form method="post">
+              {% csrf_token %}
+              {{ form|crispy }}
+              <p>¿Olvidaste tu contrase&ntilde;a? <a href="{% url 'password_reset' %}">Recuperala aqui</a>.</p>
+
+              <button type="submit" class="btn btn-primary">Acceder</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

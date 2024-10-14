@@ -1,0 +1,103 @@
+{% extends 'admin_panel/_base.html' %}
+{% load static crispy_forms_tags %}
+{% load pagination_tag %}
+
+{% block css %}
+    {{ block.super }}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
+{% endblock %}
+
+{% block page-title %}
+    Listado de {{ view.model.get_meta.verbose_name_plural }}
+{% endblock %}
+
+
+
+{% block main_container %}
+
+
+
+    {% if filter %}
+    <div class="container clearfix">
+        <div class="col-12">
+            <form action="" method="get" autocomplete="off">
+                <table class="table table-sm table-hover">
+                {{ filter.form|crispy }}
+                </table>
+                <input type="submit" class="btn btn-lg btn-primary" value="Buscar">
+            </form>
+        </div>
+    </div>
+    {% endif %}
+    {% block content %}
+    {% endblock %}
+
+
+<nav class="col-12">
+  {% if is_paginated %}
+
+    
+      <ul class="pagination justify-content-center flex-wrap" aria-label="Patient Navigation">
+    
+        {% get_proper_elided_page_range paginator page_obj.number as page_range %} <!-- here -->
+            {% for i in page_range %}
+                {% if page_obj.number == i %}
+                    <li class="active page-item">
+                        <span class="page-link">{{ i }}</span>
+                    </li>
+                {% else %}
+                    {% if i == paginator.ELLIPSIS %}
+                        <li class="page-item">
+                            <span class="page-link">{{ paginator.ELLIPSIS }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% url_replace page=i %}">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+    
+      </ul>
+  {% endif %}
+</nav>
+
+
+
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+
+<!-- XDSoft DateTimePicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
+<script>
+    $(function () {
+        $(".dateinput").datetimepicker({
+            format: 'd/m/Y',
+            timepicker: false,
+        });
+    });
+    $(function () {
+        $(".timeinput").datetimepicker({
+            format: 'H:i',
+            datepicker: false,
+        });
+    });
+    $(function () {
+        $(".datetimeinput").datetimepicker({
+            format: 'd/m/Y H:i',
+        });
+    });
+
+</script>
+<!-- Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("select").select2({width:'100%'})
+    })
+</script>
+{% endblock %}

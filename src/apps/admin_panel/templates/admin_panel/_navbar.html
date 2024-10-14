@@ -1,0 +1,39 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{% url 'admin_panel:index' %}" style="width: 180px;">
+        <img src="{% static 'admin_panel/img/logo_text.png' %}" class="img-fluid">
+    </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav w-100">
+
+      
+      {% if perms.appointments.view_appointment %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'admin_panel:appointments:index' %}">Consultas</a>
+      </li>
+      {% endif %}
+      
+      {% if perms.patients.view_patient %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'admin_panel:patients:index' %}">Pacientes</a>
+      </li>
+      {% endif %}
+
+      {% if perms.surgeries.view_surgery %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'admin_panel:surgeries:index' %}">Cirugías</a>
+      </li>
+      {% endif %}
+
+      
+
+      <li class="nav-item ml-auto">
+		<a class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+

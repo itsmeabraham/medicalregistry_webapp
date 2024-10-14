@@ -1,0 +1,51 @@
+{% extends 'admin_panel/_base_list.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block title-buttons %}
+<a href="{% url 'admin_panel:patients:create'  %}" class="btn btn-success">Nuevo</a>
+{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"> <a href="{% url 'admin_panel:index' %}">Home</a></li>
+    <li class="breadcrumb-item active">Pacientes</li>
+{% endblock %}
+
+
+
+
+
+    {% block content %}
+<div class="container">
+
+<div class="row">
+<div class="col-12">
+
+<table class="table table-bordered table-hover table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Fecha de Nacimiento</th>
+            <th>Ultima Cita</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in object_list %}
+        <tr>
+            <td>
+                            <a href="{% url 'admin_panel:patients:detail' item.uuid %}">
+                {{item.full_name}}
+                </a>
+                </td>
+                <td>{{item.date_of_birth|default:"-"}}</td>
+                <td>{{item.appointments.first.timestamp|default:"-"}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+</div>
+
+</div>
+</div>
+    {% endblock %}

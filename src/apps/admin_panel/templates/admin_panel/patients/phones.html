@@ -1,0 +1,55 @@
+{% extends 'admin_panel/_base_update.html' %}
+{% load crispy_forms_tags %}
+
+                {% block form %}
+                <form  method="post" enctype="multipart/form-data" autocomplete="off">
+                {% csrf_token %}
+
+                {% for hidden_field in form.hidden_fields %}
+                    {{ hidden_field.errors }}
+                    {{ hidden_field }}
+                {% endfor %}
+
+                {{ form.management_form }}
+
+                <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Numero</th>
+                                    <th>Tipo</th>
+                                    <th>Borrar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for frm in form %}
+                                <tr>
+                                    {% for hidden in frm.hidden_fields %}
+                                        {{ hidden.errors.as_ul }}
+                                        {{ hidden }}
+                                    {% endfor %}
+                                    <td>
+                                        {{ frm.non_field_errors.as_ul }}
+                                        {{ frm.number.errors.as_ul }}
+                                        {{ frm.number }}
+                                    </td>
+                                    <td>
+                                        {{ frm.type_of.errors.as_ul }}
+                                        {{ frm.type_of }}
+                                    </td>
+                                    <td>
+                                        {{ frm.DELETE.errors.as_ul }}
+                                        {{ frm.DELETE }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            <tbody>
+                        </table>
+                    </div>
+
+
+                    <a style="width:150px;" class="btn btn-danger" href="{{ last_url }}">Cancelar</a>
+                    <input style="width:150px;" class="btn btn-success" type="submit" name="" value="Confirmar">
+                </form>
+                {% endblock %}

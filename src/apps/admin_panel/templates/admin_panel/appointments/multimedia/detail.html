@@ -1,0 +1,103 @@
+{% extends 'admin_panel/_base_detail.html' %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'admin_panel:index' %}">Home</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_panel:appointments:index' %}">Consultas</a></li>
+<li class="breadcrumb-item active">{{object}}</li>
+{% endblock %}
+
+{% block title-buttons %}
+<a href="{% url 'admin_panel:appointments:update' object.uuid %}" class="btn btn-info">Editar</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+		<div class="card shadow">
+			<div class="card-header bg-dark text-white">
+				<h4>Informacion General</h4>
+			</div>
+			<ul class="list-group list-group-flushed">
+				<li class="list-group-item">
+					<span class="list-group-item--title">Paciente</span>
+					<span class="float-right list-group-item--content">
+                        {{ object.patient }}
+                            <a href="{% url 'admin_panel:patients:detail' object.patient.uuid %}"><i class="fas fa-link"></i></a>
+                    </span>
+				</li>
+				<li class="list-group-item">
+					<span class="list-group-item--title">Fecha</span>
+					<span class="float-right list-group-item--content">{{ object.timestamp }}</span>
+				</li>
+				<li class="list-group-item">
+					<span class="list-group-item--title">Doctor</span>
+					<span class="float-right list-group-item--content">{{ object.doctor }}</span>
+				</li>
+			</ul>
+		</div>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 mt-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h5>Nota</h5>
+                    <a href="{% url 'admin_panel:appointments:update-note' object.uuid %}" class="float-right">Editar</a>
+                </div>
+                <div class="card-body">
+                    <p>{{ object.note|default:"-"|safe }}</p>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-12 mt-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h5>Laboratorios</h5>
+                    <a href="{% url 'admin_panel:appointments:update-laboratories' object.uuid %}" class="float-right">Editar</a>
+                </div>
+                <div class="card-body">
+                    <p>{{ object.laboratories|default:"-"|safe }}</p>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-12 mt-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h5>Gabinete</h5>
+                    <a href="{% url 'admin_panel:appointments:update-cabinet' object.uuid %}" class="float-right">Editar</a>
+                </div>
+                <div class="card-body">
+                    <p>{{ object.cabinet|default:"-"|safe }}</p>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-12 mt-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h5>Plan</h5>
+                    <a href="{% url 'admin_panel:appointments:update-plan' object.uuid %}" class="float-right">Editar</a>
+                </div>
+                <div class="card-body">
+                    <p>{{ object.plan|default:"-"|safe }}</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block bottom-buttons %}
+<a href="{% url 'admin_panel:appointments:delete' object.pk %}" class="btn btn-danger"> Eliminar </a>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "./_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+    {{ form.media.css }}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
+{% endblock %}
+
+
+{% block page-title %}
+    Formulario de {{ view.model.get_meta.verbose_name }}
+{% endblock %}
+{% block page-subtitle %}
+{% endblock %}
+
+{#{% block breadcrumb-container %}{% endblock %}#}
+
+{% block main_container %}
+        {% block extra-content %}{% endblock %}
+<div class="container" id="main">
+
+	<div class="row justify-content-center">
+		<div class="col-md-8">
+
+			{% block form %}
+                {% block form-method %}
+
+                <form  method="POST" enctype="multipart/form-data" autocomplete="off" novalidate>
+                {% endblock %}
+                {% csrf_token %}
+
+                {% block form-fields %}
+                    {{ form|crispy }}
+                {% endblock %}
+
+                {% block inline-fields %}
+                {% endblock %}
+
+                {% block form-buttons %}
+                    <a style="width:150px;" class="btn btn-danger" href="{{ last_url }}">Cancelar</a>
+                    <input style="width:150px;" class="btn btn-success" type="submit" name="" value="Confirmar">
+                {% endblock %}
+                </form>
+
+
+            {% endblock %}
+
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+{{ form.media.js }}
+
+<!-- XDSoft DateTimePicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
+<script>
+    $(function () {
+        $(".dateinput").datetimepicker({
+            format: 'd/m/Y',
+            timepicker: false,
+        });
+    });
+    $(function () {
+        $(".timeinput").datetimepicker({
+            format: 'H:i',
+            datepicker: false,
+        });
+    });
+    $(function () {
+        $(".datetimeinput").datetimepicker({
+            format: 'd/m/Y H:i',
+        });
+    });
+
+</script>
+<!-- Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("select").select2({width:'100%'})
+    })
+</script>
+{% endblock %}

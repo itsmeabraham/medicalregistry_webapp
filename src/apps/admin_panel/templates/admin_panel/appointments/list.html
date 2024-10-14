@@ -1,0 +1,55 @@
+{% extends 'admin_panel/_base_list.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block title-buttons %}
+<a href="{% url 'admin_panel:appointments:create'  %}" class="btn btn-success">Nuevo</a>
+{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"> <a href="{% url 'admin_panel:index' %}">Home</a></li>
+    <li class="breadcrumb-item active">Consultas</li>
+{% endblock %}
+
+
+
+
+
+    {% block content %}
+<div class="container">
+
+<div class="row">
+<div class="col-12">
+
+<table class="table table-bordered table-hover table-striped">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Paciente</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in object_list %}
+        <tr>
+            <td>
+                            <a href="{% url 'admin_panel:appointments:detail' item.uuid %}">
+                {{item.date|default:"Sin Fecha"}}
+                </a>
+            </td>
+            <td>{{item.time|default:"Sin Hora"}}</td>
+            <td>
+                {{item.patient.full_name}}
+                <a href="{% url 'admin_panel:patients:detail' item.patient.uuid %}"><i class="fas fa-link"></i></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+<a href="{% url 'admin_panel:appointments:index'  %}" class="btn btn-primary">Ver consultas de Hoy</a>
+</div>
+
+</div>
+</div>
+    {% endblock %}

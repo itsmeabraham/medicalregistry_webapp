@@ -1,0 +1,114 @@
+{% extends 'admin_panel/_base_detail.html' %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'admin_panel:index' %}">Home</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_panel:patients:index' %}">Pacientes</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_panel:patients:detail' object.patient.uuid %}">{{object.patient.full_name}}</a></li>
+<li class="breadcrumb-item active">{{object}}</li>
+{% endblock %}
+
+{% block title-buttons %}
+<a href="{% url 'admin_panel:surgeries:update' object.uuid %}" class="btn btn-info">Editar</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 mt-4">
+		<div class="card shadow">
+			<div class="card-header bg-dark text-white">
+				<h4>Informacion General</h4>
+			</div>
+			<ul class="list-group list-group-flushed">
+				<li class="list-group-item">
+					<span class="list-group-item--title">Paciente</span>
+					<span class="float-right list-group-item--content">
+                        {{ object.patient }}
+                            <a href="{% url 'admin_panel:patients:detail' object.patient.uuid %}"><i class="fas fa-link"></i></a>
+                    </span>
+				</li>
+				<li class="list-group-item">
+					<span class="list-group-item--title">Fecha de Cirugía</span>
+					<span class="float-right list-group-item--content">
+                            {{ object.date|default:"-" }}
+                            <small>({{ object.date|timesince}})</small>
+                    </span>
+				</li>
+				<li class="list-group-item">
+					<span class="list-group-item--title">Tipo de Cirugía</span>
+					<span class="float-right list-group-item--content">
+                            {{ object.type_of|default:"-" }}
+                    </span>
+				</li>
+			</ul>
+		</div>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+    <div class="col-12">
+                        <div class="card">
+
+                            <div class="card-header">
+                                <h5>
+                                    {{object.name }} 
+                                </h5>
+                            </div>
+
+                            <div class="card-body">
+                            <p><strong>Nota: </strong>{{ object.note|default:"n/a"|safe }}</p>
+                            <p><strong>Comentarios: </strong>{{ object.comments|default:"n/a"|safe }}</p>
+                            </div>
+
+                        </div>
+
+
+
+
+
+
+
+
+    </div>
+    </div>
+</div>
+
+
+<div class="container mt-5">
+        <hr>
+    <div class="row">
+        <div class="col-12 mt-4">
+            <h3>Multimedia</h3>
+            <a href="{% url 'admin_panel:surgeries:multimedia:create' object.uuid %}" class="btn btn-primary">Nuevo Archivo</a>
+        </div>
+        {% for item in object.multimedia.all %}
+        <div class="col-md-6 col-lg-4 col-xl-3 col-sm-12 mt-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h5>{{item}}</h5>
+                    <a href="{% url 'admin_panel:surgeries:multimedia:update' object.uuid item.uuid %}" class="float-right">Editar</a>
+                </div>
+                <div class="card-body">
+                    <p>{{ item.name|default:"-"|safe }}</p>
+                </div>
+                <div class="card-footer">
+                    <a href="" class="btn btn-sm btn-info" target="_blank"> <i class="fas fa-eye"></i> </a>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+        <hr>
+</div>
+
+
+
+{% endblock %}
+
+{% block bottom-buttons %}
+<a href="{% url 'admin_panel:surgeries:delete' object.uuid %}" class="btn btn-danger"> Eliminar </a>
+{% endblock %}

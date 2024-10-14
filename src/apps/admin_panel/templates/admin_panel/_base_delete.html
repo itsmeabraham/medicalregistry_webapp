@@ -1,0 +1,69 @@
+{% extends "./_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+    {{ form.media.css }}
+{% endblock %}
+
+
+{% block page-title %}
+    Confirmacion de Eliminacion de  {{ view.model.get_meta.verbose_name }}
+{% endblock %}
+
+{% block page-subtitle %}
+  {{object}}
+{% endblock %}
+
+{% block breadcrumb-container %}{% endblock %}
+
+
+{% block main_container %}
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-md-8 alert alert-danger">
+      <p>
+        Estas seguro/a de querer borrar el {{ view.model.get_meta.verbose_name }} <strong>{{object}}</strong>?
+      </p>
+      <p>
+        Esta acción NO es reversible.
+      </p>
+{#      <p>#}
+{#        {% for item in object.get_meta.related_objects %}#}
+{#        {{item.field}}#}
+{#        {% endfor %}#}
+{#      </p>#}
+
+			{% block form %}
+                {% block form-method %}
+                <form  method="post" enctype="multipart/form-data">
+                {% endblock %}
+                {% csrf_token %}
+
+                {% block form-fields %}
+                    {{ form|crispy }}
+                {% endblock %}
+
+                {% block inline-fields %}
+                {% endblock %}
+
+                {% block form-buttons %}
+                    <input style="width:150px;" class="btn btn-danger" action="action" onclick="window.history.go(-1); return false;" type="button" value="Cancelar" />
+                    <input style="width:150px;" class="btn btn-success" type="submit" name="" value="Confirmar">
+                {% endblock %}
+                </form>
+
+
+            {% endblock %}
+
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+{{ form.media.js }}
+
+
+{% endblock %}

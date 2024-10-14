@@ -1,0 +1,286 @@
+{% extends 'admin_panel/_base_detail.html' %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'admin_panel:index' %}">Home</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_panel:patients:index' %}">Pacientes</a></li>
+<li class="breadcrumb-item active">{{object}}</li>
+{% endblock %}
+
+{% block title-buttons %}
+<a href="{% url 'admin_panel:patients:update' object.uuid %}" class="btn btn-info">Editar</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 mt-4">
+		<div class="card shadow">
+			<div class="card-header bg-dark text-white">
+				<h4>Informacion General</h4>
+			</div>
+			<ul class="list-group list-group-flushed">
+				<li class="list-group-item">
+					<span class="list-group-item--title">Paciente</span>
+					<span class="float-right list-group-item--content">{{ object.full_name }}</span>
+				</li>
+				<li class="list-group-item">
+					<span class="list-group-item--title">Fecha de Nacimiento</span>
+					<span class="float-right list-group-item--content">
+                            {{ object.date_of_birth|default:"-" }}
+                            <small>({{ object.date_of_birth|timesince}})</small>
+                    </span>
+				</li>
+				<li class="list-group-item">
+					<span class="list-group-item--title">Comentarios</span>
+                        <span class="float-right text-right list-group-item--content d-flex">
+                            <div class="text-info mx-2">
+                            {{ object.comments|default:""|safe }}
+                            </div>
+                        <a href="{% url 'admin_panel:patients:update-comments' object.uuid %}" class="">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </span>
+				</li>
+				<li class="list-group-item">
+					<span class="list-group-item--title">Alergias</span>
+                        <span class="float-right text-right list-group-item--content d-flex">
+                            <div class="text-danger mx-2">
+                            {{ object.alergies|default:""|safe }}
+                            </div>
+                        <a href="{% url 'admin_panel:patients:update-comments' object.uuid %}" class="">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </span>
+				</li>
+				<li class="list-group-item">
+					<span class="list-group-item--title">Alertas</span>
+                        <span class="float-right text-right list-group-item--content d-flex">
+                            <div class="text-warning mx-2">
+                            {{ object.alerts|default:""|safe }}
+                            </div>
+                        <a href="{% url 'admin_panel:patients:update-comments' object.uuid %}" class="">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </span>
+				</li>
+			</ul>
+		</div>
+    </div>
+    <div class="col-md-6 mt-4">
+		<div class="card shadow">
+			<div class="card-header bg-dark text-white">
+				<h4>Información de Contacto</h4>
+			</div>
+			<ul class="list-group list-group-flushed">
+				<li class="list-group-item">
+					<span class="list-group-item--title">Correos</span>
+					<span class="float-right list-group-item--content">
+                            {{ object.email|default:"-" }}
+                    </span>
+				</li>
+				<li class="list-group-item">
+					<span class="list-group-item--title">Teléfonos</span>
+					<span class="float-right list-group-item--content">
+                            {{ object.phones|default:"-" }}
+            <a href="{% url 'admin_panel:patients:update-phones' object.uuid %}" class="">Editar</a>
+                    </span>
+				</li>
+				<li class="list-group-item">
+					<span class="list-group-item--title">Dirección</span>
+					<span class="float-right list-group-item--content">
+                            {{ object.address.full_address|default:"-" }}
+            <a href="{% url 'admin_panel:patients:update-address' object.uuid %}" class="">Editar</a>
+                    </span>
+				<li class="list-group-item">
+					<span class="list-group-item--title">Referido Por</span>
+					<span class="float-right list-group-item--content">
+                            {{ object.refered_by|default:"-" }}
+                    </span>
+				</li>
+			</ul>
+		</div>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+    <div class="col-12">
+
+
+
+
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="pills-appointments-tab" data-toggle="pill" data-target="#pills-appointments" type="button" role="tab" aria-controls="pills-appointments" aria-selected="true">Consultas</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-history-tab" data-toggle="pill" data-target="#pills-history" type="button" role="tab" aria-controls="pills-history" aria-selected="false">Historia Clínica</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-surgery-tab" data-toggle="pill" data-target="#pills-surgery" type="button" role="tab" aria-controls="pills-surgery" aria-selected="false">Cirugías</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-money-tab" data-toggle="pill" data-target="#pills-money" type="button" role="tab" aria-controls="pills-money" aria-selected="false">Estado de Cuenta</button>
+  </li>
+</ul>
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-appointments" role="tabpanel" aria-labelledby="pills-appointments-tab">
+                    <div class="col-12 mt-2 text-right"> 
+                    <a href="{% url 'admin_panel:patients:appointments:create' object.uuid %}" class="btn btn-info">Agregar Consulta</a> 
+                    </div>
+                {% for item in object.appointments.all %} 
+                    <div class="col-12 mt-4"> 
+                        <div class="card">
+
+                            <div class="card-header">
+                                <h5>
+                                    {{item.timestamp }} 
+                                    <small>(hace {{item.timestamp|timesince}})</small></th>
+                                </h5>
+                                <h6>{{item.motive|default:""}}</h6>
+                                <a href="{% url 'admin_panel:appointments:detail' item.uuid %}" class="btn btn-primary float-right">Ir a Consulta</a>
+                            </div>
+
+                            <div class="card-body">
+                            <p><strong>Nota: </strong>{{ item.note|default:"n/a"|safe|truncatewords:40 }}</p>
+                            <p><strong>Subjetivo: </strong>{{ item.subjective|default:"n/a"|safe|truncatewords:40 }}</p>
+                            <p><strong>Objetivo: </strong>{{ item.objective|default:"n/a"|safe|truncatewords:40 }}</p>
+                            <p><strong>Análisis: </strong>{{ item.analisis|default:"n/a"|safe|truncatewords:40 }}</p>
+                            <p><strong>Plan: </strong>{{ item.plan|default:"n/a"|safe|truncatewords:40 }}</p>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+
+    </div>
+  <div class="tab-pane fade" id="pills-history" role="tabpanel" aria-labelledby="pills-history-tab">
+                    <div class="col-12 mt-4"> 
+                        <div class="card">
+                            <div class="card-body">
+                            <p><strong>AHF: </strong>{{ object.family_health_history|default:"n/a"|safe|truncatewords:40 }}</p>
+                            <p><strong>APNP: </strong>{{ object.personal_health_history|default:"n/a"|safe|truncatewords:40 }}</p>
+                            <p><strong>APP: </strong>{{ object.personal_pathological_health_history|default:"n/a"|safe|truncatewords:40 }}</p>
+                            <p><strong>AGO: </strong>{{ object.gynecological_health_history|default:"n/a"|safe|truncatewords:40 }}</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+    </div>
+  <div class="tab-pane fade" id="pills-surgery" role="tabpanel" aria-labelledby="pills-surgery-tab">
+                    <div class="col-12 mt-2 text-right"> 
+                    <a href="{% url 'admin_panel:patients:surgeries:create' object.uuid %}" class="btn btn-info">Agregar Cirugía</a> 
+                    </div>
+                    {% for item in object.surgeries.all %}
+                    <div class="col-12 mt-4"> 
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>
+                                    {{item.name }} 
+                                    <small>(Fecha: {{item.date}})</small></th>
+                                </h5>
+                                <a href="{% url 'admin_panel:surgeries:detail' item.uuid %}" class="btn btn-primary float-right">Ir a Cirugía</a>
+                            </div>
+
+                            <div class="card-body">
+                            <p><strong>Comentarios: </strong>{{ item.note|default:"n/a"|safe|truncatewords:40 }}</p>
+                            <p><strong>Notas: </strong>{{ item.comments|default:"n/a"|safe|truncatewords:40 }}</p>
+                            </div>
+
+                        </div>
+                    {% endfor %}
+                </div>
+  <div class="tab-pane fade" id="pills-ap" role="tabpanel" aria-labelledby="pills-ap-tab">
+                        <div class="card">
+                            <div class="card-body">
+                            <p><strong>Alcohol: </strong>{{ object.personalhealthhistory.alochol|default:"n/a"|safe }}</p>
+                            <p><strong>Alergias: </strong>{{ object.personalhealthhistory.alergies|default:"n/a"|safe }}</p>
+                            <p><strong>Congénitos Personales: </strong>{{ object.personalhealthhistory.congenital|default:"n/a"|safe }}</p>
+                            <p><strong>Inmunizaciones: </strong>{{ object.personalhealthhistory.inmunizations|default:"n/a"|safe }}</p>
+                            <p><strong>Médicos: </strong>{{ object.personalhealthhistory.medical|default:"n/a"|safe }}</p>
+                            <p><strong>Psiquiátricos: </strong>{{ object.personalhealthhistory.psychiatric|default:"n/a"|safe }}</p>
+                            <p><strong>Quirúrgicos: </strong>{{ object.personalhealthhistory.surgical|default:"n/a"|safe }}</p>
+                            <p><strong>Tabaquismo: </strong>{{ object.personalhealthhistory.smoking|default:"n/a"|safe }}</p>
+                            <p><strong>Toxicomanías: </strong>{{ object.personalhealthhistory.drougs|default:"n/a"|safe }}</p>
+                            <p><strong>Transfusionales: </strong>{{ object.personalhealthhistory.transfusions|default:"n/a"|safe }}</p>
+                            <p><strong>Traumatológicos: </strong>{{ object.personalhealthhistory.traumatic|default:"n/a"|safe }}</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+  <div class="tab-pane fade" id="pills-ag" role="tabpanel" aria-labelledby="pills-ag-tab">
+                        <div class="card">
+                            <div class="card-body">
+                            <p><strong>Cambios Recientes: </strong>{{ object.gynecologicalhealthhistory.recent_changes|default:"n/a"|safe }}</p>
+                            <p><strong>Anticoncepción Actual: </strong>{{ object.gynecologicalhealthhistory.current_birth_control|default:"n/a"|safe }}</p>
+                            <p><strong>Anticoncepción Previa: </strong>{{ object.gynecologicalhealthhistory.previous_birth_control|default:"n/a"|safe }}</p>
+                            <p><strong>Anticoncepción Previa 2: </strong>{{ object.gynecologicalhealthhistory.previous_birth_control_2|default:"n/a"|safe }}</p>
+                            <p><strong>Anticoncepción Previa 3: </strong>{{ object.gynecologicalhealthhistory.previous_birth_control_3|default:"n/a"|safe }}</p>
+
+                            <p><strong>FUM: </strong>{{ object.gynecologicalhealthhistory.last_menstruation_date|default:"n/a"|safe }}</p>
+                            <p><strong>Dismenorrea: </strong>{{ object.gynecologicalhealthhistory.dismenorhea|default:"n/a"|safe }}</p>
+                            <p><strong>Dispareunia: </strong>{{ object.gynecologicalhealthhistory.dispareunia|default:"n/a"|safe }}</p>
+                            <p><strong>Duración: </strong>{{ object.gynecologicalhealthhistory.duration|default:"n/a"|safe }}</p>
+                            <p><strong>Edad: </strong>{{ object.gynecologicalhealthhistory.age|default:"n/a"|safe }}</p>
+
+                            <p><strong>VSA: </strong>{{ object.gynecologicalhealthhistory.active_sexual_life|default:"n/a"|safe }}</p>
+                            <p><strong>Frec. Rel Sexuales: </strong>{{ object.gynecologicalhealthhistory.sex_life_frecuency|default:"n/a"|safe }}</p>
+                            <p><strong>Intervalo: </strong>{{ object.gynecologicalhealthhistory.interval|default:"n/a"|safe }}</p>
+                            <p><strong>Menarca: </strong>{{ object.gynecologicalhealthhistory.menarc|default:"n/a"|safe }}</p>
+                            <p><strong>Menopausia: </strong>{{ object.gynecologicalhealthhistory.menopause|default:"n/a"|safe }}</p>
+                            <p><strong>Síndrome Climatérico: </strong>{{ object.gynecologicalhealthhistory.climateric|default:"n/a"|safe }}</p>
+
+                            <p><strong>BIRADS: </strong>{{ object.gynecologicalhealthhistory.birads|default:"n/a"|safe }}</p>
+                            <p><strong>BIRADS USG: </strong>{{ object.gynecologicalhealthhistory.birads_usg|default:"n/a"|safe }}</p>
+
+                            <p><strong>Tratamiento LIE: </strong>{{ object.gynecologicalhealthhistory.lie_treatment|default:"n/a"|safe }}</p>
+                            <p><strong>VPH Test: </strong>{{ object.gynecologicalhealthhistory.vph_test|default:"n/a"|safe }}</p>
+                            <p><strong>Z Score: </strong>{{ object.gynecologicalhealthhistory.z_score|default:"n/a"|safe }}</p>
+                            <p><strong>T Score: </strong>{{ object.gynecologicalhealthhistory.t_score|default:"n/a"|safe }}</p>
+
+                            <p><strong>Fecha Colposcopía: </strong>{{ object.gynecologicalhealthhistory.colposcopy_date|default:"n/a"|safe }}</p>
+                            <p><strong>Resultados Colposcopía: </strong>{{ object.gynecologicalhealthhistory.colposcopy_results|default:"n/a"|safe }}</p>
+                            <p><strong>Fecha Mastografía: </strong>{{ object.gynecologicalhealthhistory.masstography_date|default:"n/a"|safe }}</p>
+                            <p><strong>Resultados Mastografía: </strong>{{ object.gynecologicalhealthhistory.masstography_results|default:"n/a"|safe }}</p>
+                            <p><strong>Fecha PaP: </strong>{{ object.gynecologicalhealthhistory.pap_date|default:"n/a"|safe }}</p>
+                            <p><strong>Resultados PaP: </strong>{{ object.gynecologicalhealthhistory.pap_results|default:"n/a"|safe }}</p>
+                            <p><strong>Fecha Densitometría: </strong>{{ object.gynecologicalhealthhistory.densitometry_date|default:"n/a"|safe }}</p>
+                            <p><strong>Resultados Densitometría: </strong>{{ object.gynecologicalhealthhistory.densitometry_results|default:"n/a"|safe }}</p>
+                            <p><strong>Fecha USG Pélvico: </strong>{{ object.gynecologicalhealthhistory.pelvic_usg_date|default:"n/a"|safe }}</p>
+                            <p><strong>Resultados USG Pélvico: </strong>{{ object.gynecologicalhealthhistory.pelvic_usg_results|default:"n/a"|safe }}</p>
+                            <p><strong>Fecha USG Mama: </strong>{{ object.gynecologicalhealthhistory.breast_usg_date|default:"n/a"|safe }}</p>
+                            <p><strong>Resultados USG Mama: </strong>{{ object.gynecologicalhealthhistory.breast_usg_results|default:"n/a"|safe }}</p>
+
+                            <p><strong>Terapia de Reemplazo: </strong>{{ object.gynecologicalhealthhistory.replacement_therapy|default:"n/a"|safe }}</p>
+                            <p><strong>Terapia de Reemplazo 2: </strong>{{ object.gynecologicalhealthhistory.replacement_therapy_2|default:"n/a"|safe }}</p>
+                            <p><strong>Terapia de Reemplazo 3: </strong>{{ object.gynecologicalhealthhistory.replacement_therapy_3|default:"n/a"|safe }}</p>
+                            <p><strong>Terapia de Reemplazo 4: </strong>{{ object.gynecologicalhealthhistory.replacement_therapy_4|default:"n/a"|safe }}</p>
+
+                            </div>
+
+                        </div>
+                    </div>
+    </div>
+</div>
+
+
+
+
+    </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}
+
+{% block bottom-buttons %}
+<a href="{% url 'admin_panel:patients:delete' object.uuid %}" class="btn btn-danger"> Eliminar </a>
+{% endblock %}

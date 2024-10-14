@@ -1,0 +1,28 @@
+{% extends 'admin_panel/_base.html' %}
+{% load static crispy_forms_tags %}
+
+{% block title %}
+    {{object}}
+{% endblock %}
+
+{% block page-title %}
+    {{object}}
+{% endblock %}
+
+{% comment %}
+{% block page-subtitle %}
+    {{object.get_meta.verbose_name}}
+{% endblock %}
+{% endcomment %}
+
+
+
+{% block main_container %}
+
+    {% block content %}
+    {% endblock %}
+
+{% endblock %}
+
+{% block bottom-buttons %}
+{% endblock %}
