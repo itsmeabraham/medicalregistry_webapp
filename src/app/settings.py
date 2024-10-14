@@ -220,7 +220,7 @@ IMPORT_DRY_RUN_FIRST_TIME = False
 
 # Sendgrid
 SENDGRID_API_KEY = env.str(
-    "SENDGRID_API_KEY", default="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"
+    "SENDGRID_API_KEY", default=""
 )
 SEND_EMAILS = env.bool("SEND_EMAILS", default=False)
 FROM_EMAIL = env.str("FROM_EMAIL", default="noreply@comuna18.com")
